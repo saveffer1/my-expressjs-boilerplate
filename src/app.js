@@ -22,7 +22,11 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(pubdir));
 
-app.use(morgan(process.env.NODE_ENV === "production" ? ("combined", {stream: logStream}) : (logger.morgan_dev)));
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined', { stream: logStream }));
+  } else {
+    app.use(morgan(logger.morgan_dev));
+  }
 
 app.use("/", page_routes);
 app.use("/api", api_routes);
