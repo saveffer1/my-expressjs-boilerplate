@@ -4,18 +4,14 @@ const fs = require("fs");
 const path = require("path");
 const morgan = require("morgan");
 
-const config = require("./src/config/config");
-const page_routes = require("./src/routes/page_routes");
-const api_routes = require("./src/routes/api_routes");
-const logger = require("./src/config/morgan_log_config");
-
-const host = config.HOST;
-const port = config.PORT;
+const page_routes = require("./routes/page_routes");
+const api_routes = require("./routes/api_routes");
+const logger = require("./config/morgan_log_config");
 
 const pubdir = path.join(__dirname, "public");
 
 const logStream = fs.createWriteStream(
-    path.join(__dirname, "log", "access.log"), { 
+    path.join(__dirname, "../log", "access.log"), { 
         flags: "a" 
     }
 );
@@ -31,7 +27,4 @@ app.use(morgan(process.env.NODE_ENV === "production" ? ("combined", {stream: log
 app.use("/", page_routes);
 app.use("/api", api_routes);
 
-app.listen(port, host, () => {
-    console.log(`Environment: ${process.env.NODE_ENV === "production" ? "Production" : "Development"}`)
-    console.log(`Server is running on http://${host}:${port}`);
-});
+module.exports = app;
